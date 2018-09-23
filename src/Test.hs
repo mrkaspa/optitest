@@ -17,77 +17,7 @@ import Model
 import Generators
 import Test.QuickCheck
 
-optimization0 = OptimizationData
-    { vehicle_id =  1
-    , max_weight =  15
-    , max_vol =  1
-    , measure_type =  "time"
-    , departure =  "now"
-    , calculation_type =  "naive"
-    , max_measure =  480
-    , download_time =  20
-    , algorithm =  "genetic"
-    , routes = [task0, task1, task2]
-    }
-
-task0 = Task 
-      { task_type =  "l"
-      , address =  "Iglesia el señor de los milagros"
-      , address_extra =  ""
-      , description =  ""
-      , city =  "Espinal"
-      , dep_state =  "Sur espinal"
-      , country =  "Colombia"
-      , client =  "Iglesia"
-      , phone =  ""
-      , num_doc =  ""
-      , email =  ""
-      , meta =  ""
-      , weight =  4
-      , volume =  1
-      , lat =  4.142657
-      , lon = -74.881513
-      }
-
-task1 = Task
-      { task_type =  "u"
-      , address =  "Sitio 1"
-      , address_extra =  ""
-      , description =  ""
-      , city =  "Espinal"
-      , dep_state =  "Sur espinal"
-      , country =  "Colombia"
-      , client =  "Iglesia"
-      , phone =  ""
-      , num_doc =  ""
-      , email =  ""
-      , meta =  ""
-      , weight =  4
-      , volume =  1
-      , lat =  4.143529
-      , lon =  -74.877261
-      }
-
-task2 = Task
-      { task_type =  "u"
-      , address =  "Sitio 2"
-      , address_extra =  ""
-      , description =  ""
-      , city =  "Espinal"
-      , dep_state =  "Sur espinal"
-      , country =  "Colombia"
-      , client =  "Iglesia"
-      , phone =  ""
-      , num_doc =  ""
-      , email =  ""
-      , meta =  ""
-      , weight =  4
-      , volume =  1
-      , lat =  4.149289
-      , lon =  -74.882963
-      }
-
-
+authenticationData :: AuthenticationData
 authenticationData
     = AuthenticationData
     { email = "admin@liftit.co"
