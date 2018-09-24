@@ -38,7 +38,7 @@ instance Arbitrary Task where
       return $ Task {..} 
 
 
--- minTaskSize mus be greather than 2 (minimum 3)
+-- minTaskSize mus be minimum 3
 minTaskSize = 3
 maxTaskSize = 100 
 diffTaskSize = max minTaskSize (maxTaskSize - minTaskSize)
