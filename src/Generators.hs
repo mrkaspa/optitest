@@ -37,7 +37,10 @@ instance Arbitrary Task where
           country = "Colombia"
       return $ Task {..} 
 
-maxTaskSize = 100 - 3
+
+-- minTaskSize mus be greather than 2 (minimum 3)
+minTaskSize = 3
+maxTaskSize = max minTaskSize (500 - minTaskSize)
 
 instance Arbitrary OptimizationData where
    arbitrary = do
@@ -50,5 +53,5 @@ instance Arbitrary OptimizationData where
            algorithm = "ants"
        max_measure <- choose(4*60,8*60)
        download_time <- choose(10,20)
-       routes <- (++) <$> vector 3 <*> resize maxTaskSize arbitrary  
+       routes <- (++) <$> vector minTaskSize <*> resize maxTaskSize arbitrary  
        return $ OptimizationData {..}
