@@ -16,6 +16,7 @@ import Data.Aeson
 import Model
 import Generators
 import Test.QuickCheck
+import Control.Concurrent (threadDelay)
 
 authenticationData :: AuthenticationData
 authenticationData
@@ -29,17 +30,24 @@ requestToken Parameters {..} authenticationData = do
     response <- post (host <> "/authenticate") $ toJSON authenticationData
     return $ response ^. responseBody . key "token" . _String
 
-requestOptimization :: Token -> Parameters -> OptimizationData -> IO (OptimizationResponse OptimizationResponseData)
+requestOptimization :: Token -> Parameters -> OptimizationData -> IO (OptimizationData,OptimizationResponse OptimizationResponseData)
 requestOptimization newToken Parameters{..} optimizationData = do
     let options = defaults & header hAuthorization .~ ["Bearer " <> E.encodeUtf8 newToken]
     response <- asJSON =<< 
                 postWith options (host <> "/optimizer") (toJSON optimizationData)
-    return (response ^. responseBody)  
+    return (optimizationData,response ^. responseBody)
+
+processResponse (OptimizationData{..},OptimizationResponse{..}) = do
+    let numberOfTasks = length routes
+        OptimizationResponseData{..} = data_
+        summary = SummaryResponse{..}
+    print summary
+    threadDelay 5000
 
 testOptimizations :: Parameters -> IO ()
 testOptimizations parameters@Parameters{..} = do 
     newToken <- requestToken parameters authenticationData
     let test = generate (sizedOptimizationData minTaskSize maxTaskSize) 
                >>= requestOptimization newToken parameters
-    mapM_ (\_ -> test) [1..numberOfTests]
+    mapM_ (\_ -> test >>= processResponse) [1..numberOfTests]
 

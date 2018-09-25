@@ -100,6 +100,15 @@ instance ToJSON a => ToJSON (OptimizationResponse a) where
       toJSON OptimizationResponse{..} =
              object ["code" .= code, "message" .= message, "data" .= data_]
 
+data SummaryResponse
+    = SummaryResponse
+    { reference :: T.Text
+    , code :: T.Text
+    , description :: T.Text
+    , numberOfTasks :: Int
+    }
+    deriving (Show, Generic, Eq)
+
 
 instance FromJSON AuthenticationData
 instance ToJSON AuthenticationData
