@@ -18,13 +18,6 @@ import Generators
 import Test.QuickCheck
 import Control.Concurrent (threadDelay)
 
-authenticationData :: AuthenticationData
-authenticationData
-    = AuthenticationData
-    { email = "optiLiftiAdmin@liftit.co"
-    , password = "liftit_2018"
-    }
-
 requestToken :: Parameters -> AuthenticationData -> IO Token
 requestToken Parameters {..} authenticationData = do 
     response <- post (host <> "/authenticate") $ toJSON authenticationData
@@ -44,8 +37,8 @@ processResponse (OptimizationData{..},OptimizationResponse{..}) = do
     print summary
     threadDelay 5000
 
-testOptimizations :: Parameters -> IO ()
-testOptimizations parameters@Parameters{..} = do 
+testOptimizations :: Parameters -> AuthenticationData -> IO ()
+testOptimizations parameters@Parameters{..} authenticationData = do 
     newToken <- requestToken parameters authenticationData
     let test = generate (sizedOptimizationData minTaskSize maxTaskSize) 
                >>= requestOptimization newToken parameters

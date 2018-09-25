@@ -1,11 +1,12 @@
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards, ApplicativeDo #-}
 
 module Main where
 
 import Test
+import qualified Data.Text as T
 import Options.Applicative
 import Data.Semigroup ((<>))
-import Model (Parameters(..))
+import Model (Parameters(..),AuthenticationData(..))
 import Generators (defaultMinTaskSize, defaultMaxTaskSize, defaultNumberOfTests)
 
 theUrl :: Parser String 
@@ -40,10 +41,29 @@ theTestCases = option auto
     <> value defaultNumberOfTests
     <> help "Number of tests" )
 
-parseParameters :: Parser Parameters
-parseParameters = Parameters <$> theUrl <*> theMinSize <*> theMaxSize <*> theTestCases
+theEmail :: Parser T.Text
+theEmail = T.pack <$> (strOption
+    ( long "email"
+    <> short 'e'
+    <> metavar "EMAIL"
+    <> value "optiLiftiAdmin@liftit.co"
+    <> help "The authentication email" ))
 
-commandLine :: ParserInfo Parameters
+thePassword :: Parser T.Text
+thePassword = T.pack <$> (strOption
+    ( long "password"
+    <> short 'p'
+    <> metavar "PASSWORD"
+    <> value "liftit_2018"
+    <> help "The authentication password" ))
+
+parseParameters :: Parser (Parameters,AuthenticationData)
+parseParameters = do 
+    parameters <- Parameters <$> theUrl <*> theMinSize <*> theMaxSize <*> theTestCases
+    authenticationData <- AuthenticationData <$> theEmail <*> thePassword
+    pure (parameters,authenticationData)
+
+commandLine :: ParserInfo (Parameters,AuthenticationData)
 commandLine = info (parseParameters <**> helper) idm
 
 validateParameters :: Parameters -> IO ()
@@ -54,6 +74,7 @@ validateParameters Parameters{..} | minTaskSize > maxTaskSize = fail "The maximu
 
 main :: IO ()
 main = do 
-    parameters <- execParser commandLine
+    (parameters,authenticationData) <- execParser commandLine
     validateParameters parameters
-    testOptimizations parameters
+    print authenticationData
+    testOptimizations parameters authenticationData
