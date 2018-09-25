@@ -38,7 +38,7 @@ instance Arbitrary Task where
       return $ Task {..} 
 
 
--- minTaskSize mus be minimum 3
+-- minTaskSize must be a minimum of 3
 defaultMinTaskSize = 3
 defaultMaxTaskSize = 100 
 
