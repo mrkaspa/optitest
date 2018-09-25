@@ -39,8 +39,14 @@ instance Arbitrary Task where
 
 
 -- minTaskSize must be a minimum of 3
+defaultMinTaskSize :: Int
 defaultMinTaskSize = 3
-defaultMaxTaskSize = 100 
+
+defaultMaxTaskSize :: Int
+defaultMaxTaskSize = 100
+
+defaultNumberOfTests :: Int
+defaultNumberOfTests = 100
 
 instance Arbitrary OptimizationData where
    arbitrary = sizedOptimizationData defaultMinTaskSize defaultMaxTaskSize

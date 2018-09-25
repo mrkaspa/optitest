@@ -41,5 +41,5 @@ testOptimizations parameters@Parameters{..} = do
     newToken <- requestToken parameters authenticationData
     let test = generate (sizedOptimizationData minTaskSize maxTaskSize) 
                >>= requestOptimization newToken parameters
-    mapM_ (\_ -> test) [1..100]
+    mapM_ (\_ -> test) [1..numberOfTests]
 

@@ -12,6 +12,7 @@ data Parameters
     { host :: String
     , minTaskSize :: Int
     , maxTaskSize :: Int
+    , numberOfTests :: Int
     }
     deriving (Show, Eq)
 
