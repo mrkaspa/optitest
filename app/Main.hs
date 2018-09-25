@@ -40,8 +40,8 @@ commandLine :: ParserInfo Parameters
 commandLine = info (parseParameters <**> helper) idm
 
 validateParameters :: Parameters -> IO ()
-validateParameters Parameters{..} | minTaskSize > maxTaskSize = error "The maximum task size must be equal or greather than the minimum task size" 
-                                  | minTaskSize < 3 = error "The minimun task size is 3"
+validateParameters Parameters{..} | minTaskSize > maxTaskSize = fail "The maximum task size must be equal or greather than the minimum task size" 
+                                  | minTaskSize < 3 = fail "The minimun task size is 3"
                                   | otherwise = return ()
 
 main :: IO ()

@@ -13,6 +13,8 @@ data Parameters
     , minTaskSize :: Int
     , maxTaskSize :: Int
     }
+    deriving (Show, Eq)
+
 
 type Latitude = Double
 type Longitude = Double
@@ -38,7 +40,7 @@ data Task
     , lat:: Latitude
     , lon:: Longitude
     }
-    deriving (Show, Generic, Eq)
+   deriving (Show, Generic, Eq)
 
 data OptimizationData
     = OptimizationData
