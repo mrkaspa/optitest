@@ -46,6 +46,6 @@ validateParameters Parameters{..} | minTaskSize > maxTaskSize = error "The maxim
 
 main :: IO ()
 main = do 
-    parameters@Parameters{..} <- execParser commandLine
+    parameters <- execParser commandLine
     validateParameters parameters
     testOptimizations parameters
