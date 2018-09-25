@@ -94,7 +94,7 @@ instance FromJSON a => FromJSON (OptimizationResponse a) where
     -- A non-Object value is of the wrong type, so fail.
     parseJSON _          = mzero
 instance ToJSON a => ToJSON (OptimizationResponse a) where
-      toJSON (OptimizationResponse {..}) =
+      toJSON OptimizationResponse{..} =
              object ["code" .= code, "message" .= message, "data" .= data_]
 
 
