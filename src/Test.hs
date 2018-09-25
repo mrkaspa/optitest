@@ -20,28 +20,26 @@ import Test.QuickCheck
 authenticationData :: AuthenticationData
 authenticationData
     = AuthenticationData
-    { email = "admin@liftit.co"
-    , password = "liftit-2018"
+    { email = "optiLiftiAdmin@liftit.co"
+    , password = "liftit_2018"
     }
 
-host :: String
-host = "http://localhost:3000"
-
-requestToken :: AuthenticationData -> IO Token
-requestToken authenticationData = do 
+requestToken :: Parameters -> AuthenticationData -> IO Token
+requestToken Parameters {..} authenticationData = do 
     response <- post (host <> "/authenticate") $ toJSON authenticationData
     return $ response ^. responseBody . key "token" . _String
 
-requestOptimization :: Token -> OptimizationData -> IO (OptimizationResponse OptimizationResponseData)
-requestOptimization newToken optimizationData = do
+requestOptimization :: Token -> Parameters -> OptimizationData -> IO (OptimizationResponse OptimizationResponseData)
+requestOptimization newToken Parameters{..} optimizationData = do
     let options = defaults & header hAuthorization .~ ["Bearer " <> E.encodeUtf8 newToken]
     response <- asJSON =<< 
                 postWith options (host <> "/optimizer") (toJSON optimizationData)
     return (response ^. responseBody)  
 
-testOptimizations :: IO ()
-testOptimizations = do 
-    newToken <- requestToken authenticationData
-    -- response <- requestOptimization newToken optimization0 
-    mapM_ (\_ -> generate arbitrary >>= requestOptimization newToken) [1..100]
+testOptimizations :: Parameters -> IO ()
+testOptimizations parameters@Parameters{..} = do 
+    newToken <- requestToken parameters authenticationData
+    let test = generate (sizedOptimizationData minTaskSize maxTaskSize) 
+               >>= requestOptimization newToken parameters
+    mapM_ (\_ -> test) [1..100]
 

@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, DeriveGeneric, ScopedTypeVariables, DuplicateRecordFields, RecordWildCards #-}
+{-# LANGUAGE OverloadedStrings, ScopedTypeVariables, DuplicateRecordFields, RecordWildCards #-}
 
 module Generators where
 
@@ -39,20 +39,27 @@ instance Arbitrary Task where
 
 
 -- minTaskSize mus be minimum 3
-minTaskSize = 3
-maxTaskSize = 100 
-diffTaskSize = max minTaskSize (maxTaskSize - minTaskSize)
+defaultMinTaskSize = 3
+defaultMaxTaskSize = 100 
 
 instance Arbitrary OptimizationData where
-   arbitrary = do
-       vehicle_id <- (1+) <$> arbitrarySizedNatural 
-       max_weight <- choose (1,100)
-       max_vol <- choose (1,100::Int)
-       let measure_type = "time"
-           departure = "now"
-           calculation_type = "naive"
-           algorithm = "ants"
-       max_measure <- choose(4*60,8*60)
-       download_time <- choose(10,20)
-       routes <- (++) <$> vector minTaskSize <*> resize diffTaskSize arbitrary  
-       return $ OptimizationData {..}
+   arbitrary = sizedOptimizationData defaultMinTaskSize defaultMaxTaskSize
+
+sizedOptimizationData :: Int -> Int -> Gen OptimizationData
+sizedOptimizationData minSize maxSize = do
+    vehicle_id <- (1+) <$> arbitrarySizedNatural 
+    max_weight <- choose (1,100)
+    max_vol <- choose (1,100::Int)
+    let measure_type = "time"
+        departure = "now"
+        calculation_type = "naive"
+        algorithm = "ants"
+    max_measure <- choose(4*60,8*60)
+    download_time <- choose(10,20)
+    routes <- arrayGen minSize maxSize  
+    return $ OptimizationData {..}
+
+arrayGen :: Arbitrary a => Int -> Int -> Gen [a]
+arrayGen minSize maxSize = (++) <$> vector minSize <*> resize diffSize arbitrary
+    where diffSize = max (maxSize - minSize) minSize
+

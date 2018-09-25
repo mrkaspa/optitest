@@ -7,6 +7,13 @@ import GHC.Generics
 import qualified Data.Text as T
 import Control.Monad
 
+data Parameters 
+    = Parameters 
+    { host :: String
+    , minTaskSize :: Int
+    , maxTaskSize :: Int
+    }
+
 type Latitude = Double
 type Longitude = Double
 
