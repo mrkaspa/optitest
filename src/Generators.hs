@@ -15,11 +15,11 @@ arbitraryNonEmptyText :: Gen T.Text
 arbitraryNonEmptyText = T.pack <$> nonEmptyList (elements $ (' ':['A'..'Z'])++['a'..'z'])
 
 arbitraryText :: Gen T.Text
-arbitraryText = T.pack <$> arbitrary
+arbitraryText = T.pack <$> listOf (elements $ (' ':['A'..'Z'])++['a'..'z'])
 
 instance Arbitrary Task where
    arbitrary = do
-      task_type <- arbitraryNonEmptyText
+      let task_type = "u"
       address <- arbitraryNonEmptyText
       address_extra <- arbitraryText
       description <- arbitraryText
