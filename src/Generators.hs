@@ -11,6 +11,10 @@ nonEmptyList gen = do
    xs <- listOf gen
    return (x:xs)
 
+arbitraryNonEmptyTextNumber :: Gen T.Text
+arbitraryNonEmptyTextNumber = T.pack <$> nonEmptyList (elements ['0'..'9'])
+
+
 arbitraryNonEmptyText :: Gen T.Text
 arbitraryNonEmptyText = T.pack <$> nonEmptyList (elements $ (' ':['A'..'Z'])++['a'..'z'])
 
@@ -24,7 +28,7 @@ instance Arbitrary Task where
       address_extra <- arbitraryText
       description <- arbitraryText
       client <- arbitraryNonEmptyText
-      phone <- arbitraryText
+      phone <- arbitraryNonEmptyTextNumber
       num_doc <- arbitraryText
       email <- arbitraryText
       meta <- arbitraryText
@@ -64,6 +68,8 @@ sizedOptimizationData minSize maxSize = do
     download_time <- choose(10,20)
     routes <- fixRoutes <$> arrayGen minSize maxSize 
     return $ OptimizationData {..}
+  where fixRoutes [] = []
+        fixRoutes (task:tasks) = task{task_type = "l"} : tasks
 
 arrayGen :: Arbitrary a => Int -> Int -> Gen [a]
 arrayGen minSize maxSize = (++) <$> vector minSize <*> resize diffSize arbitrary
