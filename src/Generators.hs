@@ -24,16 +24,16 @@ arbitraryText = T.pack <$> listOf (elements $ (' ':['A'..'Z'])++['a'..'z'])
 instance Arbitrary Task where
    arbitrary = do
       let task_type = "u"
-      address <- arbitraryNonEmptyText
-      address_extra <- arbitraryText
-      description <- arbitraryText
-      client <- arbitraryNonEmptyText
-      phone <- arbitraryNonEmptyTextNumber
-      num_doc <- arbitraryText
-      email <- arbitraryText
-      meta <- arbitraryText
-      weight <- choose(1,10)
-      volume <- choose(1,10)
+          address = "address"
+          address_extra = ""
+          description = ""
+          client = "cliente"
+          phone = "1234567"
+          num_doc = ""
+          email = ""
+          meta = ""
+      weight <- choose(1,11000)
+      volume <- choose(1,11000)
       lat <- choose (4.647157,4.657636)
       lon <- choose (-74.050104,-74.077820)
       let city = "Bogota"
@@ -58,13 +58,13 @@ instance Arbitrary OptimizationData where
 sizedOptimizationData :: Int -> Int -> Gen OptimizationData
 sizedOptimizationData minSize maxSize = do
     vehicle_id <- (1+) <$> arbitrarySizedNatural 
-    max_weight <- choose (1,1000)
-    max_vol <- choose (1,1000::Int)
+    max_weight <- choose (1000,10000)
+    max_vol <- choose (1000,100000::Int)
     let measure_type = "time"
         departure = "now"
         calculation_type = "naive"
         algorithm = "ants"
-    max_measure <- choose(4*60,8*60)
+    max_measure <- (*60) <$> choose(1,12)
     download_time <- choose(10,20)
     routes <- fixRoutes <$> arrayGen minSize maxSize 
     return $ OptimizationData {..}
@@ -72,6 +72,9 @@ sizedOptimizationData minSize maxSize = do
         fixRoutes (task:tasks) = task{task_type = "l"} : tasks
 
 arrayGen :: Arbitrary a => Int -> Int -> Gen [a]
-arrayGen minSize maxSize = (++) <$> vector minSize <*> resize diffSize arbitrary
+arrayGen = arrayFromGen arbitrary
+
+arrayFromGen :: Gen a -> Int -> Int -> Gen [a]
+arrayFromGen gen minSize maxSize = (++) <$> vectorOf minSize gen <*> resize diffSize (listOf gen)
     where diffSize = max (maxSize - minSize) minSize
 
