@@ -28,8 +28,8 @@ instance Arbitrary Task where
       num_doc <- arbitraryText
       email <- arbitraryText
       meta <- arbitraryText
-      weight <- choose(1,100)
-      volume <- choose(1,100)
+      weight <- choose(1,10)
+      volume <- choose(1,10)
       lat <- choose (4.647157,4.657636)
       lon <- choose (-74.050104,-74.077820)
       let city = "Bogota"
@@ -54,8 +54,8 @@ instance Arbitrary OptimizationData where
 sizedOptimizationData :: Int -> Int -> Gen OptimizationData
 sizedOptimizationData minSize maxSize = do
     vehicle_id <- (1+) <$> arbitrarySizedNatural 
-    max_weight <- choose (1,100)
-    max_vol <- choose (1,100::Int)
+    max_weight <- choose (1,1000)
+    max_vol <- choose (1,1000::Int)
     let measure_type = "time"
         departure = "now"
         calculation_type = "naive"
