@@ -62,7 +62,7 @@ sizedOptimizationData minSize maxSize = do
         algorithm = "ants"
     max_measure <- choose(4*60,8*60)
     download_time <- choose(10,20)
-    routes <- arrayGen minSize maxSize  
+    routes <- fixRoutes <$> arrayGen minSize maxSize 
     return $ OptimizationData {..}
 
 arrayGen :: Arbitrary a => Int -> Int -> Gen [a]
