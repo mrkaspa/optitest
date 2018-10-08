@@ -35,7 +35,7 @@ processResponse (OptimizationData{..},OptimizationResponse{..}) = do
         OptimizationResponseData{..} = data_
         summary = SummaryResponse{..}
     print summary
-    threadDelay 5000
+    threadDelay 500
 
 testOptimizations :: Parameters -> AuthenticationData -> IO ()
 testOptimizations parameters@Parameters{..} authenticationData = do 

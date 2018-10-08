@@ -1,4 +1,4 @@
 .stack-work/
 optitest.cabal
 *~
-traza.txt
+traza*.txt
